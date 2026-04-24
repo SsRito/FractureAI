@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FractureAI — How it Works</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="how-it-works.css" />
+</head>
+<body>
+
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar">
+    <a class="logo" href="index.html">
+      <span class="logo-dot"></span>
+      FractureAI
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Analyze</a></li>
+      <li><a href="how-it-works.html" class="active">How it Works</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <span class="tf-badge">Tensorflow v2.3</span>
+  </nav>
+
+  <main class="hiw-main">
+
+    <!-- ── PAGE HEADER ── -->
+    <header class="hiw-header">
+      <span class="page-tag">Documentation</span>
+      <h1>How <em>FractureAI</em> Works</h1>
+      <p class="hiw-subtitle">
+        A visual walkthrough of how your X-ray goes from upload
+        to a confident fracture classification result.
+      </p>
+    </header>
+
+    <!-- ── PIPELINE OVERVIEW ── -->
+    <section class="pipeline-section">
+      <div class="section-label">Pipeline Overview</div>
+      <p class="section-desc">Six stages from upload to result — completed in under 3 seconds.</p>
+
+      <div class="pipeline-track">
+
+        <div class="pipeline-step">
+          <div class="step-left">
+            <div class="step-circle"><span class="step-number">1</span></div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-icon">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M11 2C7.5 2 4.5 4.8 4.5 8.5c0 .8.15 1.55.4 2.25C2.6 11.6 1 13.4 1 15.5 1 18 3 20 5.5 20h11c3 0 5.5-2.5 5.5-5.5 0-2.6-1.8-4.8-4.2-5.35C17.55 4.35 14.55 2 11 2z" stroke="currentColor" stroke-width="1.4" fill="none"/>
+                <path d="M11 13.5V8M8.5 10.5 11 8l2.5 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>Upload X-ray Image</h3>
+            <p>Drag and drop or select your X-ray. PNG and JPG formats are supported. Files are processed in memory and never stored permanently on the server.</p>
+            <div class="step-tech-tag">Multipart / FormData</div>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="step-left">
+            <div class="step-circle"><span class="step-number">2</span></div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-icon">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+                <rect x="12" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+                <rect x="3" y="12" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+                <rect x="12" y="12" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+              </svg>
+            </div>
+            <h3>Preprocessing &amp; Normalization</h3>
+            <p>The image is converted to RGB, resized to 224×224 pixels, and cast to float32. Pixel values are kept in the raw 0–255 range to match the training pipeline exactly.</p>
+            <div class="step-tech-tag">PIL · NumPy · 224×224</div>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="step-left">
+            <div class="step-circle"><span class="step-number">3</span></div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-icon">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <circle cx="4" cy="11" r="2" stroke="currentColor" stroke-width="1.4"/>
+                <circle cx="11" cy="5" r="2" stroke="currentColor" stroke-width="1.4"/>
+                <circle cx="11" cy="17" r="2" stroke="currentColor" stroke-width="1.4"/>
+                <circle cx="18" cy="11" r="2" stroke="currentColor" stroke-width="1.4"/>
+                <path d="M6 11h3M13 11h3M11 7v4M11 13v2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>CNN Feature Extraction</h3>
+            <p>The backbone network scans the image layer by layer, identifying edges, textures, and structural patterns such as cortical breaks and bone irregularities associated with fractures.</p>
+            <div class="step-tech-tag">ResNet101 · ImageNet weights</div>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="step-left">
+            <div class="step-circle"><span class="step-number">4</span></div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-icon">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M4 11h14M4 6h9M4 16h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                <circle cx="17" cy="16" r="3" stroke="currentColor" stroke-width="1.4"/>
+              </svg>
+            </div>
+            <h3>Classification</h3>
+            <p>The custom head — GlobalAveragePooling → Dense(512) → Dense(256) → Dense(2, softmax) — outputs a probability distribution over the two classes: Fractured and Non Fractured.</p>
+            <div class="step-tech-tag">Softmax · SparseCategoricalCrossentropy</div>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="step-left">
+            <div class="step-circle"><span class="step-number">5</span></div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-icon">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M3 17L8 11l4 4 3.5-5 3.5 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>Confidence Score</h3>
+            <p>The predicted class's softmax probability is reported as a percentage confidence score. A score of 90% means the model assigns 90% probability to that class from the final output layer.</p>
+            <div class="step-tech-tag">argmax · softmax probability</div>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="step-left">
+            <div class="step-circle"><span class="step-number">6</span></div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-icon">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <circle cx="11" cy="11" r="4" stroke="currentColor" stroke-width="1.4"/>
+                <circle cx="11" cy="11" r="7.5" stroke="currentColor" stroke-width="1" stroke-dasharray="2 2"/>
+                <circle cx="11" cy="11" r="1.5" fill="currentColor"/>
+              </svg>
+            </div>
+            <h3>Grad-CAM Heatmap</h3>
+            <p>Gradient-weighted Class Activation Mapping computes gradients of the predicted class score with respect to the last Conv2D layer. The result is overlaid on the X-ray using COLORMAP_JET at alpha=0.3.</p>
+            <div class="step-tech-tag">Grad-CAM · COLORMAP_JET · α=0.3</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── MODEL ARCHITECTURE ── -->
+    <section class="arch-section">
+      <div class="section-label">Model Architecture</div>
+      <p class="section-desc">Custom classifier head on top of a pretrained backbone, trained with 5-fold cross-validation.</p>
+
+      <div class="arch-grid">
+
+        <div class="arch-block backbone-block">
+          <div class="arch-block-label">Backbone (frozen)</div>
+          <div class="arch-layer-list">
+            <div class="arch-layer backbone-layer">
+              <span class="layer-name">Input</span>
+              <span class="layer-shape">224 × 224 × 3</span>
+            </div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-layer backbone-layer highlight">
+              <span class="layer-name">ResNet101</span>
+              <span class="layer-shape">ImageNet pretrained</span>
+            </div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-layer backbone-layer">
+              <span class="layer-name">Feature Maps</span>
+              <span class="layer-shape">7 × 7 × 1280</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="arch-divider">
+          <div class="arch-divider-line"></div>
+          <span class="arch-divider-label">+</span>
+          <div class="arch-divider-line"></div>
+        </div>
+
+        <div class="arch-block head-block">
+          <div class="arch-block-label">Custom Head (trainable)</div>
+          <div class="arch-layer-list">
+            <div class="arch-layer head-layer">
+              <span class="layer-name">GlobalAveragePooling2D</span>
+              <span class="layer-shape">1280</span>
+            </div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-layer head-layer">
+              <span class="layer-name">Dense + ReLU</span>
+              <span class="layer-shape">512</span>
+            </div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-layer head-layer">
+              <span class="layer-name">Dense + ReLU</span>
+              <span class="layer-shape">256</span>
+            </div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-layer head-layer highlight">
+              <span class="layer-name">Dense + Softmax</span>
+              <span class="layer-shape">2 classes</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── TRAINING DETAILS ── -->
+    <section class="training-section">
+      <div class="section-label">Training Details</div>
+      <p class="section-desc">Key hyperparameters and strategy used during model training.</p>
+
+      <div class="training-grid">
+        <div class="training-card">
+          <div class="training-card-icon cyan">⚙</div>
+          <div class="training-card-label">Optimizer</div>
+          <div class="training-card-value">Adam</div>
+          <div class="training-card-sub">lr = 0.0001</div>
+        </div>
+        <div class="training-card">
+          <div class="training-card-icon green">⊞</div>
+          <div class="training-card-label">Cross Validation</div>
+          <div class="training-card-value">5-Fold</div>
+          <div class="training-card-sub">Stratified splits</div>
+        </div>
+        <div class="training-card">
+          <div class="training-card-icon cyan">◈</div>
+          <div class="training-card-label">Epochs</div>
+          <div class="training-card-value">30</div>
+          <div class="training-card-sub">Early stopping (patience=5)</div>
+        </div>
+        <div class="training-card">
+          <div class="training-card-icon green">▣</div>
+          <div class="training-card-label">Batch Size</div>
+          <div class="training-card-value">32</div>
+          <div class="training-card-sub">Mixed precision float16</div>
+        </div>
+        <div class="training-card">
+          <div class="training-card-icon cyan">⊡</div>
+          <div class="training-card-label">Loss Function</div>
+          <div class="training-card-value">Sparse CCE</div>
+          <div class="training-card-sub">from_logits=False</div>
+        </div>
+        <div class="training-card">
+          <div class="training-card-icon green">◉</div>
+          <div class="training-card-label">LR Scheduler</div>
+          <div class="training-card-value">ReduceLROnPlateau</div>
+          <div class="training-card-sub">patience=5, monitor val_loss</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PREPROCESSING PIPELINE ── -->
+    <section class="preproc-section">
+      <div class="section-label">Preprocessing Pipeline</div>
+      <p class="section-desc">Image augmentation and enhancement applied before training.</p>
+
+      <div class="preproc-grid">
+        <div class="preproc-card">
+          <div class="preproc-card-header">
+            <span class="preproc-index">01</span>
+            <h4>Gamma Correction</h4>
+          </div>
+          <p>Brightens underexposed X-rays using a gamma value of 0.6, enhancing visibility of bone structures in dark regions.</p>
+        </div>
+        <div class="preproc-card">
+          <div class="preproc-card-header">
+            <span class="preproc-index">02</span>
+            <h4>Image Negative</h4>
+          </div>
+          <p>Inverts pixel intensities (255 − pixel) to highlight fracture lines that are more visible in the negative representation.</p>
+        </div>
+        <div class="preproc-card">
+          <div class="preproc-card-header">
+            <span class="preproc-index">03</span>
+            <h4>CLAHE</h4>
+          </div>
+          <p>Contrast Limited Adaptive Histogram Equalization (clipLimit=3, tileGrid=8×8) improves local contrast across bone regions.</p>
+        </div>
+        <div class="preproc-card">
+          <div class="preproc-card-header">
+            <span class="preproc-index">04</span>
+            <h4>Random Two-Transform</h4>
+          </div>
+          <p>Each image randomly receives two of the three augmentations above, increasing dataset diversity and model robustness.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CTA ── -->
+    <section class="hiw-cta">
+      <h2>Ready to <em>Analyze</em> an X-ray?</h2>
+      <a href="index.html" class="btn btn-cyan" style="text-decoration:none; display:inline-flex; align-items:center; gap:8px; padding:14px 36px; border-radius:12px;">
+        Start Analysis
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M6 4l5 4-5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </section>
+
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FractureAI — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .auth-wrap {
+      min-height: calc(100vh - 64px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      position: relative;
+    }
+    .auth-wrap::before {
+      content: '';
+      position: absolute;
+      top: -100px; left: 50%;
+      transform: translateX(-50%);
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(0,212,255,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bg-2);
+      border: 1px solid var(--border-mid);
+      border-radius: var(--radius-xl);
+      padding: 48px 40px;
+      animation: fade-up 0.5s ease both;
+    }
+    .auth-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 32px;
+    }
+    .auth-logo-dot {
+      width: 9px; height: 9px;
+      background: var(--cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--cyan);
+    }
+    .auth-title {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+    .auth-title em { color: var(--cyan); font-style: italic; }
+    .auth-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 36px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .form-input {
+      width: 100%;
+      background: var(--bg-3);
+      border: 1px solid var(--border-mid);
+      border-radius: var(--radius-md);
+      padding: 13px 16px;
+      font-size: 15px;
+      font-family: var(--font-body);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-input:focus {
+      border-color: var(--cyan-border);
+      box-shadow: 0 0 0 3px rgba(0,212,255,0.08);
+    }
+    .form-input::placeholder { color: var(--text-faint); }
+    .auth-error {
+      display: none;
+      padding: 12px 16px;
+      background: var(--red-dim);
+      border: 1px solid var(--red-border);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      color: var(--red);
+      margin-bottom: 20px;
+    }
+    .auth-error.visible { display: block; }
+    .btn-auth {
+      width: 100%;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      margin-top: 4px;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: opacity 0.2s;
+    }
+    .btn-auth:disabled { opacity: 0.5; cursor: not-allowed; }
+    .auth-footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .auth-footer a {
+      color: var(--cyan);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .auth-footer a:hover { opacity: 0.8; }
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .auth-divider-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .auth-divider-text {
+      font-size: 12px;
+      color: var(--text-faint);
+      font-family: var(--font-mono);
+    }
+    .guest-btn {
+      width: 100%;
+      padding: 13px;
+      font-size: 14px;
+      background: transparent;
+      border: 1px solid var(--border-mid);
+      border-radius: var(--radius-md);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: all 0.2s;
+      text-align: center;
+      display: block;
+      text-decoration: none;
+    }
+    .guest-btn:hover {
+      border-color: var(--cyan-border);
+      color: var(--text);
+      background: var(--cyan-dim);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a class="logo" href="index.html">
+      <span class="logo-dot"></span>
+      FractureAI
+    </a>
+    <ul class="nav-links">
+      <li><a href="how-it-works.html">How it Works</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <div class="nav-right">
+      <span class="tf-badge">Tensorflow v2.6</span>
+    </div>
+  </nav>
+
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <span class="auth-logo-dot"></span>
+        FractureAI
+      </div>
+
+      <h1 class="auth-title">Welcome<br><em>back</em></h1>
+      <p class="auth-sub">Sign in to access your analysis history.</p>
+
+      <div class="auth-error" id="loginError"></div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">Email</label>
+        <input class="form-input" type="email" id="email" placeholder="your@email.com" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input class="form-input" type="password" id="password" placeholder="••••••••" />
+      </div>
+
+      <button class="btn btn-cyan btn-auth" onclick="handleLogin()">Sign In</button>
+
+      <div class="auth-divider">
+        <div class="auth-divider-line"></div>
+        <span class="auth-divider-text">or</span>
+        <div class="auth-divider-line"></div>
+      </div>
+
+      <a class="guest-btn" href="index.html">Continue as Guest</a>
+
+      <p class="auth-footer">
+        Don't have an account? <a href="signup.html">Sign up</a>
+      </p>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (getCurrentUser()) window.location.href = "index.html";
+    });
+
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") handleLogin();
+    });
+
+    function handleLogin() {
+      const email    = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const errorEl  = document.getElementById("loginError");
+      const btn      = document.querySelector(".btn-auth");
+
+      errorEl.classList.remove("visible");
+
+      if (!email || !password) {
+        errorEl.textContent = "Please fill in all fields.";
+        errorEl.classList.add("visible");
+        return;
+      }
+
+      btn.textContent = "Signing in...";
+      btn.disabled = true;
+
+      const result = login(email, password);
+      if (result.ok) {
+        window.location.href = "index.html";
+      } else {
+        errorEl.textContent = result.error;
+        errorEl.classList.add("visible");
+        btn.textContent = "Sign In";
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

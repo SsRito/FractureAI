@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FractureAI — Analysis History</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .history-wrap {
+      padding: 56px 80px;
+      min-height: calc(100vh - 64px);
+    }
+    .history-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 40px;
+    }
+    .history-title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.05;
+    }
+    .history-title em { color: var(--cyan); font-style: italic; }
+    .history-count {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+    .clear-btn {
+      padding: 10px 20px;
+      font-size: 13px;
+      background: transparent;
+      border: 1px solid var(--red-border);
+      color: var(--red);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: all 0.2s;
+    }
+    .clear-btn:hover { background: var(--red-dim); }
+
+    /* Empty state */
+    .history-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+      gap: 16px;
+      color: var(--text-muted);
+    }
+    .history-empty-icon {
+      width: 72px; height: 72px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-faint);
+    }
+    .history-empty h3 {
+      font-size: 20px;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .history-empty p { font-size: 14px; text-align: center; max-width: 320px; }
+
+    /* History entries */
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .history-entry {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .history-entry:hover { border-color: var(--border-mid); }
+
+    /* Entry header */
+    .entry-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+    }
+    .entry-header:hover { background: rgba(255,255,255,0.02); }
+
+    .entry-header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .entry-badge {
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .entry-badge.fractured {
+      background: var(--red-dim);
+      border: 1px solid var(--red-border);
+      color: var(--red);
+    }
+    .entry-badge.non-fractured {
+      background: var(--green-dim);
+      border: 1px solid var(--green-border);
+      color: var(--green);
+    }
+    .entry-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .entry-date {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .entry-confidence {
+      font-size: 13px;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .entry-header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .entry-time {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-faint);
+    }
+    .entry-chevron {
+      color: var(--text-faint);
+      transition: transform 0.3s ease;
+    }
+    .entry-chevron.open { transform: rotate(180deg); }
+
+    /* Entry body (collapsible) */
+    .entry-body {
+      display: none;
+      padding: 28px;
+    }
+    .entry-body.open { display: block; }
+
+    /* Score bar inside entry */
+    .entry-score-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .entry-score-val {
+      font-family: var(--font-display);
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--green);
+      min-width: 90px;
+      line-height: 1;
+    }
+    .entry-score-val.fractured-score { color: var(--red); }
+    .entry-bar-bg {
+      flex: 1;
+      height: 8px;
+      background: var(--bg-3);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .entry-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--green), #00ffaa);
+    }
+    .entry-bar-fill.fractured-fill {
+      background: linear-gradient(90deg, var(--red), #ff8080);
+    }
+
+    /* Three image panels */
+    .entry-images {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .entry-img-panel { text-align: center; }
+    .entry-img-box {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+    .entry-img-box.lightboard-box {
+      background: #ffffff;
+      border-color: rgba(255,255,255,0.3);
+    }
+    .entry-img-box.lightboard-box img {
+      filter: invert(1);
+    }
+    .entry-img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .entry-img-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .entry-img-sublabel {
+      display: block;
+      font-size: 10px;
+      color: var(--text-faint);
+    }
+
+    /* Entry stats row */
+    .entry-stats {
+      display: flex;
+      gap: 12px;
+    }
+    .entry-stat-card {
+      flex: 1;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+    }
+    .entry-stat-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .entry-stat-val {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--cyan);
+    }
+    .entry-stat-val.white { color: var(--text); }
+
+    .download-btn {
+      border: 1px solid var(--green-border);
+      color: var(--green);
+    }
+
+    .download-btn:hover {
+      background: var(--green-dim);
+    }
+
+    .delete-btn {
+      border: 1px solid var(--red-border);
+      color: var(--red);
+    }
+
+    .delete-btn:hover {
+      background: var(--red-dim);
+    }
+
+    @media (max-width: 768px) {
+      .history-wrap { padding: 36px 24px; }
+      .entry-images { grid-template-columns: 1fr; }
+      .entry-stats { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a class="logo" href="index.html">
+      <span class="logo-dot"></span>
+      FractureAI
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Analyze</a></li>
+      <li><a href="how-it-works.html">How it Works</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <div class="nav-right">
+      <span class="tf-badge">Tensorflow v2.6</span>
+    </div>
+  </nav>
+
+  <div class="history-wrap">
+    <div class="history-header">
+      <div>
+        <h1 class="history-title">Analysis<br><em>History</em></h1>
+        <p class="history-count" id="historyCount">— entries</p>
+      </div>
+      <button class="clear-btn" id="clearBtn" style="display:none;">
+        Clear All History
+      </button>
+    </div>
+
+    <div id="historyContent"></div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script src="history.js"></script>
+</body>
+</html>

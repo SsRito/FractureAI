@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FractureAI — Automated Fracture Classification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar">
+    <a class="logo" href="index.html">
+      <span class="logo-dot"></span>
+      FractureAI
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Analyze</a></li>
+      <li><a href="how-it-works.html">How it Works</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <div class="nav-right">
+      <span class="tf-badge">Tensorflow v2.6</span>
+    </div>
+  </nav>
+
+  <!-- ── HERO / UPLOAD SECTION ── -->
+  <main>
+
+    <!-- STATE 1: Upload -->
+    <section class="hero" id="state-upload">
+      <div class="hero-left">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          Ai Powered Fracture Detection
+        </div>
+        <h1>Automated<br><em>Fracture</em><br>Classification</h1>
+        <p class="hero-desc">
+          Upload an X-ray image and receive AI-assisted fracture classification
+          with confidence scoring and visual heatmap overlays in seconds.
+        </p>
+        <div class="stats-row">
+          <div class="stat">
+            <span class="stat-val">87.9%</span>
+            <span class="stat-label">Accuracy</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <span class="stat-val">&lt;3s</span>
+            <span class="stat-label">Avg. Time</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="upload-card" id="dropZone">
+          <div class="upload-icon">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <path d="M20 4C14 4 9 9 9 15c0 1.2.2 2.3.5 3.3C6 19.5 4 22 4 25c0 3.9 3.1 7 7 7h18c4.4 0 8-3.6 8-8 0-3.8-2.6-7-6.2-7.8C30.6 10.4 25.8 4 20 4z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              <path d="M20 22v8M17 25l3-3 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <p class="upload-title">Drop your X-ray here</p>
+          <p class="upload-sub">Drag and drop or click to browse your files</p>
+          <button class="btn btn-cyan" id="selectBtn" type="button">Select X-ray Image</button>
+          <div class="fmt-badges">
+            <span class="fmt-badge">PNG</span>
+            <span class="fmt-badge">JPG</span>
+          </div>
+          <input type="file" id="fileInput" accept="image/png,image/jpeg,image/jpg" />
+        </div>
+      </div>
+    </section>
+
+    <!-- STATE 2: File Selected — Ready to Submit -->
+    <section class="hero hidden" id="state-ready">
+      <div class="hero-left">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          Ai Powered Fracture Detection
+        </div>
+        <h1>Automated<br><em>Fracture</em><br>Classification</h1>
+        <p class="hero-desc">
+          Upload an X-ray image and receive AI-assisted fracture classification
+          with confidence scoring and visual heatmap overlays in seconds.
+        </p>
+        <div class="stats-row">
+          <div class="stat">
+            <span class="stat-val">87.9%</span>
+            <span class="stat-label">Accuracy</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <span class="stat-val">&lt;3s</span>
+            <span class="stat-label">Avg. Time</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="upload-card uploaded">
+          <div class="upload-preview-box">
+            <img id="previewImg" src="" alt="X-ray preview" />
+          </div>
+          <p class="upload-filename" id="uploadFilename">image.png</p>
+          <button class="btn btn-green" type="button" disabled>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Uploaded
+          </button>
+          <div class="fmt-badges">
+            <span class="fmt-badge">PNG</span>
+            <span class="fmt-badge">JPG</span>
+          </div>
+        </div>
+        <button class="btn btn-cyan btn-full" id="startBtn" type="button">
+          Start Analysis
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M6 4l5 4-5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- STATE 3: Analyzing -->
+    <section class="analyzing-wrap hidden" id="state-analyzing">
+      <div class="status-pill cyan-pill">
+        <span class="pulse-dot cyan"></span>
+        Analyzing...
+      </div>
+
+      <div class="analyzing-grid">
+        <!-- Preview -->
+        <div class="analysis-img-box">
+          <img id="analyzingImg" src="" alt="X-ray being analyzed" />
+        </div>
+
+        <!-- Circle progress -->
+        <div class="progress-wrap">
+          <div class="circle-progress">
+            <svg class="circle-svg" viewBox="0 0 160 160">
+              <circle class="circle-track" cx="80" cy="80" r="68"/>
+              <circle class="circle-fill" id="circleArc" cx="80" cy="80" r="68"/>
+            </svg>
+            <div class="circle-inner">
+              <span class="circle-pct" id="pctDisplay">0%</span>
+            </div>
+          </div>
+          <p class="progress-label">Processing image...</p>
+
+          <!-- Mini stats shown during analysis -->
+          <div class="analyzing-stats">
+            <div class="analyzing-stat">
+              <span class="analyzing-stat-label">Model</span>
+              <span class="analyzing-stat-val">ResNet101</span>
+            </div>
+            <div class="analyzing-stat">
+              <span class="analyzing-stat-label">Folds</span>
+              <span class="analyzing-stat-val">5-Fold CV</span>
+            </div>
+            <div class="analyzing-stat">
+              <span class="analyzing-stat-label">Augmentation</span>
+              <span class="analyzing-stat-val">±10° rot/shear</span>
+            </div>
+            <div class="analyzing-stat">
+              <span class="analyzing-stat-label">Input</span>
+              <span class="analyzing-stat-val">224×224</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Steps checklist -->
+        <ul class="steps-list" id="stepsList">
+          <li class="step-item" id="step-0">
+            <span class="step-dot"></span>
+            Image uploaded and validated
+          </li>
+          <li class="step-item" id="step-1">
+            <span class="step-dot"></span>
+            Preprocessing and normalization
+          </li>
+          <li class="step-item" id="step-2">
+            <span class="step-dot"></span>
+            CNN feature extraction
+          </li>
+          <li class="step-item" id="step-3">
+            <span class="step-dot"></span>
+            Classification and scoring
+          </li>
+          <li class="step-item" id="step-4">
+            <span class="step-dot"></span>
+            Grad-CAM heatmap generation
+          </li>
+        </ul>
+
+        <!-- Info panel filling the empty right space -->
+        <div class="analyzing-info-panel">
+          <!-- Removed content as requested -->
+        </div>
+      </div>
+
+      <!-- Error message (hidden until needed) -->
+      <div class="error-box hidden" id="errorBox">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M9 5v4M9 12.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span id="errorMsg">Something went wrong. Please try again.</span>
+      </div>
+    </section>
+
+    <!-- STATE 4: Result -->
+    <section class="result-wrap hidden" id="state-result">
+      <div class="status-pill green-pill">
+        <span class="pulse-dot green"></span>
+        Analysis Complete
+      </div>
+
+      <div class="result-grid">
+        <!-- Left: Image viewer — three panels side by side -->
+        <div class="result-left">
+
+          <div class="image-panels">
+            <!-- Original -->
+            <div class="img-panel">
+              <div class="panel-img-box">
+                <img id="resultOriginal" src="" alt="Original X-ray" />
+              </div>
+              <span class="panel-label">Original</span>
+            </div>
+
+            <!-- Heatmap -->
+            <div class="img-panel">
+              <div class="panel-img-box">
+                <img id="resultHeatmap" src="" alt="Grad-CAM Heatmap" />
+              </div>
+              <span class="panel-label">Heatmap</span>
+            </div>
+
+            <!-- Light Board -->
+            <div class="img-panel">
+              <div class="panel-img-box lightboard-mode">
+                <img id="resultLightboard" src="" alt="Light Board" />
+              </div>
+              <span class="panel-label">
+                Light Board
+                <span class="panel-sublabel">Negatoscope</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="result-actions">
+            <button class="btn btn-outline" type="button" id="downloadBtn">
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+                <path d="M7.5 2v7m0 0l-3-3m3 3l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 11h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              Download
+            </button>
+            <button class="btn btn-cyan" type="button" onclick="resetToUpload()">New Analysis</button>
+          </div>
+        </div>
+
+        <!-- Right: Score & metadata -->
+        <div class="result-right">
+          <!-- Confidence score -->
+          <div class="score-card">
+            <p class="card-label">CONFIDENCE SCORE</p>
+            <p class="score-value" id="scoreValue">—</p>
+            <div class="score-bar-bg">
+              <div class="score-bar-fill" id="scoreBarFill"></div>
+            </div>
+          </div>
+
+          <!-- Classification + Time -->
+          <div class="info-grid">
+            <div class="info-card">
+              <p class="card-label">CLASSIFICATION RESULT</p>
+              <div id="classificationBadge" class="classification-badge">—</div>
+            </div>
+            <div class="info-col">
+              <div class="info-card">
+                <p class="card-label">PROCESS TIME</p>
+                <p class="info-value cyan" id="processTime">—</p>
+              </div>
+              <div class="info-card">
+                <p class="card-label">MODEL</p>
+                <p class="info-value cyan small">ResNet101</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Disclaimer -->
+          <div class="disclaimer-card">
+            <p class="disclaimer-title">Medical Disclaimer</p>
+            <p class="disclaimer-text">
+              This AI analysis is intended for research and educational purposes only.
+              It does not constitute a medical diagnosis. Always consult a licensed
+              radiologist or physician for clinical interpretation and treatment decisions.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="auth.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FractureAI — About</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="about.css" />
+</head>
+<body>
+
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar">
+    <a class="logo" href="index.html">
+      <span class="logo-dot"></span>
+      FractureAI
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Analyze</a></li>
+      <li><a href="how-it-works.html">How it Works</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+    </ul>
+    <span class="tf-badge">Tensorflow v2.3</span>
+  </nav>
+
+  <main class="about-main">
+
+    <!-- ── HERO ── -->
+    <header class="about-hero">
+      <div class="about-hero-left">
+        <div class="about-tags">
+          <span class="about-tag cyan-tag">Medical AI</span>
+          <span class="about-tag green-tag">Deep Learning</span>
+          <span class="about-tag muted-tag">Academic Research</span>
+        </div>
+        <h1>Built to<br><em>Assist,</em><br>Not Replace.</h1>
+        <p class="about-intro">
+          FractureAI is an academic research project exploring how deep learning
+          can support fracture detection from X-ray images — making preliminary
+          analysis faster, more accessible, and visually interpretable.
+        </p>
+        <p class="about-intro">
+          The goal is not to replace radiologists, but to build a tool that can
+          assist in triage, education, and research settings where expert review
+          is unavailable or delayed.
+        </p>
+      </div>
+
+      <div class="about-hero-right">
+        <div class="metrics-card">
+          <div class="metrics-card-label">Model Performance</div>
+          <div class="metrics-grid">
+            <div class="metric-item">
+              <span class="metric-val">87.9%</span>
+              <span class="metric-label">Accuracy</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-val">0.903</span>
+              <span class="metric-label">AUC Score</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-val">3K+</span>
+              <span class="metric-label">Training Images</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-val">&lt;3s</span>
+              <span class="metric-label">Per Analysis</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stack-card">
+          <div class="stack-card-label">Tech Stack</div>
+          <div class="stack-list">
+            <div class="stack-item">
+              <span class="stack-dot cyan"></span>
+              <span class="stack-name">TensorFlow 2.6</span>
+              <span class="stack-role">Model training &amp; inference</span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-dot cyan"></span>
+              <span class="stack-name">ResNet101</span>
+              <span class="stack-role">Backbone (ImageNet)</span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-dot green"></span>
+              <span class="stack-name">Flask + Flask-CORS</span>
+              <span class="stack-role">REST API backend</span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-dot green"></span>
+              <span class="stack-name">OpenCV</span>
+              <span class="stack-role">Grad-CAM heatmap generation</span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-dot muted"></span>
+              <span class="stack-name">HTML / CSS / JavaScript</span>
+              <span class="stack-role">Frontend interface</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── DATASET ── -->
+    <section class="about-section">
+      <div class="about-section-label">Dataset</div>
+      <div class="dataset-grid">
+        <div class="dataset-text">
+          <h2>FracAtlas Dataset</h2>
+          <p>
+            The model was trained on the FracAtlas dataset, a publicly available
+            collection of annotated X-ray images covering fractures of the upper
+            and lower limbs.
+          </p>
+          <p>
+            The dataset was split 80/20 into training and test sets, with a fixed
+            raw test set held out for final evaluation. Preprocessing augmentations
+            — gamma correction, image negatives, and CLAHE — were applied to the
+            training images to improve diversity and robustness.
+          </p>
+        </div>
+        <div class="dataset-stats">
+          <div class="dataset-stat-card">
+            <span class="ds-val">3,307</span>
+            <span class="ds-label">Total images</span>
+          </div>
+          <div class="dataset-stat-card">
+            <span class="ds-val">2,645</span>
+            <span class="ds-label">Training images</span>
+          </div>
+          <div class="dataset-stat-card">
+            <span class="ds-val">662</span>
+            <span class="ds-label">Test images</span>
+          </div>
+          <div class="dataset-stat-card">
+            <span class="ds-val">2</span>
+            <span class="ds-label">Classes</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── LIMITATIONS ── -->
+    <section class="about-section">
+      <div class="about-section-label">Limitations</div>
+      <h2 class="section-h2">Known Limitations</h2>
+      <p class="section-sub">Important constraints to be aware of before using this tool.</p>
+
+      <div class="limits-grid">
+        <div class="limit-card">
+          <div class="limit-icon red-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <circle cx="10" cy="10" r="8.5" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M10 6v5M10 13.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h4>Binary Classification Only</h4>
+          <p>The model outputs only Fractured or Non Fractured. It cannot identify fracture type, severity, or precise location beyond what the Grad-CAM heatmap suggests.</p>
+        </div>
+
+        <div class="limit-card">
+          <div class="limit-icon orange-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M10 2L2 17h16L10 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="none"/>
+              <path d="M10 8v4M10 14.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h4>Limited Bone Coverage</h4>
+          <p>Optimised for upper and lower limb X-rays. Results on spine, skull, ribcage, or pelvic X-rays may be unreliable and should be treated with caution.</p>
+        </div>
+
+        <div class="limit-card">
+          <div class="limit-icon orange-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <rect x="2" y="5" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.4" fill="none"/>
+              <path d="M6 5V4a4 4 0 018 0v1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h4>Not Clinically Validated</h4>
+          <p>This tool has not undergone clinical trials or regulatory review. It must not be used for real patient diagnosis or any clinical decision-making.</p>
+        </div>
+
+        <div class="limit-card">
+          <div class="limit-icon red-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <circle cx="10" cy="10" r="8.5" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M7 7l6 6M13 7l-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h4>Image Quality Sensitivity</h4>
+          <p>Performance may degrade on low-resolution, heavily compressed, or non-standard X-ray images that differ significantly from the FracAtlas training distribution.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── DISCLAIMER ── -->
+    <section class="about-section">
+      <div class="about-section-label">Legal</div>
+      <div class="full-disclaimer">
+        <div class="disclaimer-header">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2L2 17h16L10 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="none"/>
+            <path d="M10 8v4M10 14.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <span>Medical Disclaimer</span>
+        </div>
+        <p>
+          FractureAI is developed solely for academic research and educational purposes.
+          It is a university course project and has not been approved, certified, or
+          validated for clinical or diagnostic use by any medical or regulatory authority.
+        </p>
+        <p>
+          The output of this tool — including classification results, confidence scores,
+          and heatmap visualisations — does not constitute a medical diagnosis and should
+          never be used as the basis for any medical decision, treatment, or patient management.
+        </p>
+        <p>
+          Always consult a qualified and licensed radiologist, physician, or medical
+          professional for proper diagnosis and interpretation of X-ray imaging.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── CTA ── -->
+    <section class="about-cta">
+      <h2>Ready to <em>Analyze</em> an X-ray?</h2>
+      <a href="index.html" class="btn btn-cyan" style="text-decoration:none; display:inline-flex; align-items:center; gap:8px; padding:14px 36px; border-radius:12px;">
+        Start Analysis
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M6 4l5 4-5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </section>
+
+  </main>
+
+</body>
+</html>
