@@ -378,6 +378,15 @@ function showState(name) {
 
 // ─── DOWNLOAD ──────────────────────────────────────────────────────────────
 async function downloadReport(data) {
+  const printWin = window.open("", "_blank", "width=900,height=700");
+  if (!printWin) {
+    showError("Download was blocked by the browser. Please allow pop-ups and try again.");
+    return;
+  }
+
+  printWin.document.write(`<!DOCTYPE html><html><head><title>Preparing report...</title></head><body style="font-family: Arial, sans-serif; padding: 24px;">Preparing report...</body></html>`);
+  printWin.document.close();
+
   const confidence  = parseFloat(data.confidence).toFixed(1);
   const prediction  = data.prediction;
   const elapsed     = parseFloat(data.process_time ?? 0).toFixed(1);
@@ -508,7 +517,6 @@ async function downloadReport(data) {
 </body>
 </html>`;
 
-  const printWin = window.open("", "_blank", "width=900,height=700");
   printWin.document.write(html);
   printWin.document.close();
 }
