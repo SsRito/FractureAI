@@ -26,7 +26,7 @@
     return m ? parseFloat(m[1]) : 0;
   }
 
-  function openPrintableReportFromEntry(entry) {
+  function downloadReportFromEntry(entry) {
     const confidence = parseConfidence(entry.confidence).toFixed(1);
     const prediction = (entry.prediction === null || entry.prediction === undefined) ? "Unknown" : String(entry.prediction);
     const elapsed = parseProcessSeconds(entry.processTime || entry.processingTime || entry.process_time).toFixed(1);
@@ -41,7 +41,6 @@
     const badgeBg = isFractured ? "#fff0f0" : "#f0fff5";
     const badgeBorder = isFractured ? "#ffaaaa" : "#99eebb";
 
-    // Note: This matches the approach used in main.js: open a new window, write the HTML, then auto-print.
     const html = `<!DOCTYPE html>
 <html>
 <head>
@@ -149,18 +148,19 @@
     <span>FractureAI — Automated Fracture Classification</span>
   </div>
 
-  <script>
-    window.onload = function() {
-      setTimeout(function() { window.print(); }, 500);
-    };
-  </script>
 </body>
 </html>`;
 
-    const printWin = window.open("", "_blank", "width=900,height=700");
-    if (!printWin) return;
-    printWin.document.write(html);
-    printWin.document.close();
+    const blob = new Blob([html], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    const safeDate = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+    link.href = url;
+    link.download = `fractureai-history-report-${safeDate}.html`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   async function deleteEntry(id) {
@@ -172,7 +172,7 @@
     const history = await getHistory(user.email);
     const entry = history.find((e) => e.id === id);
     if (!entry) return;
-    openPrintableReportFromEntry(entry);
+    downloadReportFromEntry(entry);
   }
 
   async function clearHistoryUI() {
@@ -270,4 +270,3 @@
   document.getElementById("clearBtn").onclick = clearHistoryUI;
   renderHistory();
 })();
-

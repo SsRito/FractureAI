@@ -378,15 +378,6 @@ function showState(name) {
 
 // ─── DOWNLOAD ──────────────────────────────────────────────────────────────
 async function downloadReport(data) {
-  const printWin = window.open("", "_blank", "width=900,height=700");
-  if (!printWin) {
-    showError("Download was blocked by the browser. Please allow pop-ups and try again.");
-    return;
-  }
-
-  printWin.document.write(`<!DOCTYPE html><html><head><title>Preparing report...</title></head><body style="font-family: Arial, sans-serif; padding: 24px;">Preparing report...</body></html>`);
-  printWin.document.close();
-
   const confidence  = parseFloat(data.confidence).toFixed(1);
   const prediction  = data.prediction;
   const elapsed     = parseFloat(data.process_time ?? 0).toFixed(1);
@@ -508,17 +499,19 @@ async function downloadReport(data) {
     <span>FractureAI — Automated Fracture Classification</span>
   </div>
 
-  <script>
-    // Auto-trigger print dialog as soon as images are loaded
-    window.onload = function() {
-      setTimeout(function() { window.print(); }, 500);
-    };
-  </script>
 </body>
 </html>`;
 
-  printWin.document.write(html);
-  printWin.document.close();
+  const blob = new Blob([html], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  const safeDate = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+  link.href = url;
+  link.download = `fractureai-report-${safeDate}.html`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 /**
