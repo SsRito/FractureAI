@@ -6,7 +6,7 @@ colorTo: gray
 sdk: docker
 app_port: 7860
 suggested_hardware: cpu-basic
-short_description: Fracture detection web app with Flask, TensorFlow, and Grad-CAM.
+short_description: Fracture detection web app with TensorFlow and Grad-CAM.
 ---
 
 # FractureAI
