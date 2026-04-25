@@ -17,12 +17,14 @@ Run:
 """
 
 import io
+import os
 import base64
 import time
+from pathlib import Path
 
 import cv2
 import numpy as np
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from PIL import Image
 import tensorflow as tf
@@ -31,21 +33,19 @@ import h5py
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-RESNET_PATH = r"F:\FractureAI\ResNet101\model2.h5"
+BASE_DIR = Path(__file__).resolve().parent
+RESNET_PATH = os.environ.get(
+    "MODEL_PATH",
+    str(BASE_DIR / "ResNet101" / "model2.h5")
+)
 CLASS_NAMES = ["Fractured", "Non Fractured"]
 IMG_HEIGHT  = 224
 IMG_WIDTH   = 224
 
 # ── App setup ─────────────────────────────────────────────────────────────────
 
-app = Flask(__name__)
-CORS(app, origins=[
-    "http://127.0.0.1:5500",
-    "http://localhost:5500",
-    "http://127.0.0.1:3000",
-    "http://localhost:3000",
-    "null",
-])
+app = Flask(__name__, static_folder=str(BASE_DIR), static_url_path="")
+CORS(app)
 
 # ── Load model ────────────────────────────────────────────────────────────────
 
@@ -228,7 +228,7 @@ def generate_gradcam_overlay(pil_image, heatmap, alpha=0.3):
 
 # ── Routes ────────────────────────────────────────────────────────────────────
 
-@app.route("/", methods=["GET"])
+@app.route("/api/health", methods=["GET"])
 def health():
     return jsonify({"status": "ok", "model": RESNET_PATH})
 
@@ -291,7 +291,21 @@ def analyze():
 
     return jsonify(response)
 
+
+@app.route("/", methods=["GET"])
+def serve_index():
+    return send_from_directory(BASE_DIR, "index.html")
+
+
+@app.route("/<path:path>", methods=["GET"])
+def serve_static(path):
+    file_path = BASE_DIR / path
+    if file_path.is_file():
+        return send_from_directory(BASE_DIR, path)
+    return send_from_directory(BASE_DIR, "index.html")
+
 # ── Entry point ───────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)  # debug=False avoids reloader overhead
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
