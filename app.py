@@ -28,8 +28,6 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from PIL import Image
 import tensorflow as tf
-from tensorflow.python.keras.saving import hdf5_format
-import h5py
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
@@ -53,8 +51,9 @@ print("\n" + "="*60)
 print("Loading ResNet101 model...")
 print("="*60)
 
-with h5py.File(RESNET_PATH, mode='r') as f:
-    model = hdf5_format.load_model_from_hdf5(f)
+# Use the public Keras loader so built-in layers like BatchNormalization
+# deserialize correctly across environments such as Render.
+model = tf.keras.models.load_model(RESNET_PATH, compile=False)
 
 print(f"  Loaded: {RESNET_PATH}")
 
